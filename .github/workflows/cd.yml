@@ -26,8 +26,8 @@ jobs:
         ls -la
         terraform init
         terraform plan
-  env:
-    GOOGLE_APPLICATION_CREDENTIALS: ${HOME}/gcloud-key.json
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${HOME}/gcloud-key.json
 
     - name: Clean up
       run: rm ${HOME}/gcloud-key.json
