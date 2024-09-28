@@ -8,26 +8,30 @@ on:
 
 jobs:
   terraform:
+    name: 'Terraform'
     runs-on: ubuntu-latest
+    environment: production
 
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up Google Cloud credentials
-      run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > ${HOME}/gcloud-key.json
-
-    - name: Terraform Init and Plan
-      run: |
-        pwd
-        ls -la
-        cd infra
-        pwd
-        ls -la
-        terraform init
-        terraform plan
+   defaults:
+      run:
+        shell: bash
+        #Inform a working directory if .tf files are not in root folder
+        working-directory: ./terraform 
+        
+    - name: Terraform Init
+      run: terraform init
       env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${HOME}/gcloud-key.json
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }} 
 
-    - name: Clean up
-      run: rm ${HOME}/gcloud-key.json
+
+    # Generates an execution plan for Terraform
+    - name: Terraform Plan
+      run: terraform plan -input=false
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform apply -auto-approve -input=false
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
