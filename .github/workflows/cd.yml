@@ -1,0 +1,30 @@
+name: cd
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Google Cloud credentials
+      run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > ${HOME}/gcloud-key.json
+
+    - name: Terraform Init
+      run: terraform init
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${HOME}/gcloud-key.json
+
+    - name: Terraform Plan
+      run: terraform plan
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: ${HOME}/gcloud-key.json
+
+    - name: Clean up
+      run: rm ${HOME}/gcloud-key.json
