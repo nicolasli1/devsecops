@@ -12,25 +12,26 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
 
-    defaults:
-      run:
-        shell: bash
-        working-directory: ./terraform 
-
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Terraform Init
         run: terraform init
+        working-directory: ./infra
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
       # Generates an execution plan for Terraform
       - name: Terraform Plan
         run: terraform plan -input=false
+        working-directory: ./infra
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
+        working-directory: ./infra
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
