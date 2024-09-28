@@ -17,18 +17,17 @@ jobs:
     - name: Set up Google Cloud credentials
       run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > ${HOME}/gcloud-key.json
 
-    - name: Change directory
-      run: cd infra
-
-    - name: Terraform Init
-      run: terraform init
-      env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${HOME}/gcloud-key.json
-
-    - name: Terraform Plan
-      run: terraform plan
-      env:
-        GOOGLE_APPLICATION_CREDENTIALS: ${HOME}/gcloud-key.json
+    - name: Terraform Init and Plan
+      run: |
+        pwd
+        ls -la
+        cd infra
+        pwd
+        ls -la
+        terraform init
+        terraform plan
+  env:
+    GOOGLE_APPLICATION_CREDENTIALS: ${HOME}/gcloud-key.json
 
     - name: Clean up
       run: rm ${HOME}/gcloud-key.json
