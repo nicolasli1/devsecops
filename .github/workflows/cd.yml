@@ -16,6 +16,9 @@ jobs:
     - name: Set up Google Cloud credentials
       run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > ${HOME}/gcloud-key.json
 
+    - name: Change directory
+      run: cd infra
+
     - name: Terraform Init
       run: terraform init
       env:
