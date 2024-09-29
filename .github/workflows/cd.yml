@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-      - feature/v3
+      - feature/v4
 
 jobs:
   terraform:

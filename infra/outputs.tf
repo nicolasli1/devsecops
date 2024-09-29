@@ -30,6 +30,6 @@ output "bucket_name" {
 
 output "pubsub_topic" {
   description = "Pub/Sub topic name"
-  value       = google_pubsub_topic.example.name
+  value       = google_pubsub_topic.topic.name
 }
 
