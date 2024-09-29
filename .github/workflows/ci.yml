@@ -1,4 +1,10 @@
-name: CD
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - feature/v4
 
 jobs:
   terraform:
