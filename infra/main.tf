@@ -54,13 +54,13 @@ resource "google_storage_bucket" "function_bucket" {
 resource "google_storage_bucket_object" "function_read" {
   name   = "read-data.zip"
   bucket = google_storage_bucket.function_bucket.name
-  source = "../code/func1/function-source.zip"
+  source = "../backend/func1/function-source.zip"
 }
 
 resource "google_storage_bucket_object" "function_write" {
   name   = "write-data.zip"
   bucket = google_storage_bucket.function_bucket.name
-  source = "../code/func2/function-source.zip"
+  source = "../backend/func2/function-source.zip"
 }
 
 
@@ -128,9 +128,9 @@ resource "google_pubsub_subscription" "subscription-latam" {
 
   # bigquery_config {
   #   table              = "${var.project}.${google_bigquery_dataset.my_dataset.dataset_id}.${google_bigquery_table.my_table.table_id}"
-  #   use_table_schema   = true  # Si quieres usar el esquema de la tabla
-  #   write_metadata     = true  # Si quieres agregar metadatos
-  #   drop_unknown_fields = true  # Para evitar errores con campos desconocidos
+  #   use_table_schema   = true 
+  #   write_metadata     = true  
+  #   drop_unknown_fields = true  
   # }
 
   labels = {

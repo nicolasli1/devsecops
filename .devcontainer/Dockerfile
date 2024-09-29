@@ -18,7 +18,7 @@ RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs
 
 # Instala pandas y aws-cdk-lib usando pip
-RUN pip install pandas aws-cdk-lib boto3
+RUN pip install pandas aws-cdk-lib boto3 requests
 
 # Instala AWS CDK usando npm
 RUN npm install -g aws-cdk
