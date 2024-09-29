@@ -126,12 +126,12 @@ resource "google_pubsub_subscription" "subscription-latam" {
 
   ack_deadline_seconds = 20
 
-  bigquery_config {
-    table              = "${var.project}.${google_bigquery_dataset.my_dataset.dataset_id}.${google_bigquery_table.my_table.table_id}"
-    use_table_schema   = true  # Si quieres usar el esquema de la tabla
-    write_metadata     = true  # Si quieres agregar metadatos
-    drop_unknown_fields = true  # Para evitar errores con campos desconocidos
-  }
+  # bigquery_config {
+  #   table              = "${var.project}.${google_bigquery_dataset.my_dataset.dataset_id}.${google_bigquery_table.my_table.table_id}"
+  #   use_table_schema   = true  # Si quieres usar el esquema de la tabla
+  #   write_metadata     = true  # Si quieres agregar metadatos
+  #   drop_unknown_fields = true  # Para evitar errores con campos desconocidos
+  # }
 
   labels = {
     foo = "bar"
