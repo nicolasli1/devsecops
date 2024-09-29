@@ -1,11 +1,5 @@
 name: CD
 
-on:
-  push:
-    branches:
-      - master
-      - feature/v4
-
 jobs:
   terraform:
     name: 'Terraform'
@@ -29,20 +23,13 @@ jobs:
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
-        working-directory: ./infra
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.10'  
 
-      - name: Run E2E Tests
+      - name: Run Unit Tests - ci
         run: |
-          pip install requests
-          python test_e2e.py
-        working-directory: ./tests
+          pip install requests pytest google-cloud-bigquery
+          PYTHONPATH=. pytest tests/
+
