@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
 tests/__pycache__/
+credentials.json
+infra/terraform.tfstate
+infra/terraform.tfstate.backup
