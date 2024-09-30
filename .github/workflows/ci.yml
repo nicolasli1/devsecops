@@ -1,4 +1,4 @@
-name: CD
+name: CI
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   terraform:
-    name: 'Terraform'
+    name: 'ci'
     runs-on: ubuntu-latest
     environment: production
 
@@ -22,16 +22,8 @@ jobs:
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
-      # Generates an execution plan for Terraform
       - name: Terraform Plan
         run: terraform plan -input=false
-        working-directory: ./infra
-        env:
-          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
         working-directory: ./infra
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
@@ -41,8 +33,13 @@ jobs:
         with:
           python-version: '3.10'  
 
-      - name: Run E2E Tests
+      - name: Install Deps
         run: |
-          pip install requests
-          python test_e2e.py
-        working-directory: ./tests
+          pip install requests pytest google-cloud-bigquery
+          pip install -r backend/func1/requirements.txt 
+          PYTHONPATH=. pytest tests/
+
+      - name: Run Unit Tests - ci
+        run: |
+          PYTHONPATH=. pytest tests/
+

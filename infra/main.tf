@@ -54,13 +54,13 @@ resource "google_storage_bucket" "function_bucket" {
 resource "google_storage_bucket_object" "function_read" {
   name   = "read-data.zip"
   bucket = google_storage_bucket.function_bucket.name
-  source = "../code/func1/function-source.zip"
+  source = "../backend/func1/function-source.zip"
 }
 
 resource "google_storage_bucket_object" "function_write" {
   name   = "write-data.zip"
   bucket = google_storage_bucket.function_bucket.name
-  source = "../code/func2/function-source.zip"
+  source = "../backend/func2/function-source.zip"
 }
 
 
@@ -110,6 +110,30 @@ resource "google_cloudfunctions_function_iam_member" "read_function_invoker" {
   member         = "allUsers"
 }
 
-resource "google_pubsub_topic" "example" {
-  name = "example-topic"
+
+resource "google_pubsub_topic" "topic" {
+  name = "topic-latam"
+  labels = {
+    foo = "bar"
+  }
+
+  message_retention_duration = "86600s"
+}
+
+resource "google_pubsub_subscription" "subscription-latam" {
+  name  = "subscription-latam"
+  topic = google_pubsub_topic.topic.id
+
+  ack_deadline_seconds = 20
+
+  # bigquery_config {
+  #   table              = "${var.project}.${google_bigquery_dataset.my_dataset.dataset_id}.${google_bigquery_table.my_table.table_id}"
+  #   use_table_schema   = true 
+  #   write_metadata     = true  
+  #   drop_unknown_fields = true  
+  # }
+
+  labels = {
+    foo = "bar"
+  }
 }
