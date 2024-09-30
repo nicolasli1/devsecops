@@ -37,5 +37,6 @@ jobs:
       - name: Run Unit Tests - ci
         run: |
           pip install requests pytest google-cloud-bigquery
+          pip install -r backend/func1/requirements.txt 
           PYTHONPATH=. pytest tests/
 
