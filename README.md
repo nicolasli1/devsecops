@@ -46,6 +46,8 @@ curl -X GET https://us-central1-grounded-primer-436816-b5.cloudfunctions.net/rea
 
 ![Test en una terminal del write y read](images/1.png)
 
+Table:
+
 ![Data in the table](images/7.png)
 
 2. Deployar API HTTP en la nube mediante CI/CD a tu elección. Flujo CI/CD y
