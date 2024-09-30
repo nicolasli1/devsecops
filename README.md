@@ -53,7 +53,9 @@ Table:
 2. Deployar API HTTP en la nube mediante CI/CD a tu elección. Flujo CI/CD y
 ejecuciones deben estar visibles en el repositorio git.
 
-Se realiza el despliegue de la infraestructura como código mediante un pipeline de GitHub Actions, como se puede ver en la siguiente imagen. Además, se evidencia la creación de las APIs de lectura y escritura junto con sus respectivas URLs.
+Se realiza el despliegue de la infraestructura como código mediante un pipeline de GitHub Actions, como se puede ver en la siguiente imagen. Además, se evidencia la creación de las APIs de lectura y escritura junto con sus respectivas URLs. 
+
+El codigo del CD se encuentra en la siguiente ruta: `.github/workflows/cd.yml`
 
 
 ![cd Terraform Apply](images/2.png)
@@ -100,7 +102,8 @@ Realicé la creación del tópico en Pub/Sub y traté de configurar la suscripci
 ![Diagrama de Arquitectura](images/4.png)
 
 
-Notas: para aumentar la velocidad de desarrollo se usos el servicion serverless con un runtime de python se peude ver las fucniones en `backend/func1/main.py`, ademas de esto para estandarizar los ambientes de desarrollo se uso Dokcer para tener el mismos env, esto lo podemos ver en `.devcontainer/Dockerfile`
+**Notas**: Para aumentar la velocidad de desarrollo, se utilizó un servicio serverless con un runtime de Python 3.10. Las funciones pueden encontrarse en `backend/func1/main.py`. Además, para estandarizar los entornos de desarrollo, se implementó Docker, lo cual se puede ver en el archivo `.devcontainer/Dockerfile` se puede usar el pluging devcontainer para tener el mismo env.
+
 
 ## Parte 3: Pruebas de Integración y Puntos Críticos de Calidad
 
@@ -124,7 +127,8 @@ Se han implementado dos pruebas unitarias específicas, que se pueden encontrar 
 
 De esta manera, se puede mantener la integridad del código y garantizar que el sistema siga funcionando de acuerdo a las expectativas, incluso tras futuras modificaciones.
 
-Estas pruebas se corren en el CI.
+Estas pruebas se corren en el CI, el codigo se encuentra en la siguiente ruta: `.github/workflows/ci.yml` este pipeline se corre automaticamente cuando se crea un PR a master.
+
 
 ![CI - Unit test rinning in PR](images/5.png)
 
