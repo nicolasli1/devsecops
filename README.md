@@ -224,3 +224,4 @@ métricas para utilizarlas dentro de la definición de SLIs.
    - **Argumento**: Mantener una tasa de error baja es fundamental para generar alta confianza del usuario en la aplicación y garantizar la integridad entre todos los servicios, independientemente de la arquitectura utilizada, ya sea centralizada o distribuida, e incluso en el caso de contar con un servidor de eventos.
 
 
+.
