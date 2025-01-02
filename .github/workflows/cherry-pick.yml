@@ -30,16 +30,28 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
 
-      - name: Cherry-pick commit
-        run: |
-          git fetch origin ${{ inputs.source_branch }}
-          git checkout ${{ inputs.target_branch }}
-          git cherry-pick ${{ inputs.commit_hash }}
-          git push origin ${{ inputs.target_branch }}
+      - name: Fetch source branch
+        run: git fetch origin ${{ inputs.source_branch }}
 
-      - name: Push changes
+      - name: Create a new branch for cherry-pick
         run: |
-          git push origin ${{ inputs.target_branch }}
+          git checkout ${{ inputs.target_branch }}
+          git checkout -b cherry-pick/${{ inputs.commit_hash }}
+          git cherry-pick ${{ inputs.commit_hash }}
+
+      - name: Push cherry-pick branch
+        run: |
+          git push origin cherry-pick/${{ inputs.commit_hash }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: cherry-pick/${{ inputs.commit_hash }}
+          title: "Cherry-pick: ${{ inputs.commit_hash }}"
+          body: |
+            Este pull request contiene el cherry-pick del commit `${{ inputs.commit_hash }}`
+            desde `${{ inputs.source_branch }}` hacia `${{ inputs.target_branch }}`.
+          base: ${{ inputs.target_branch }}
