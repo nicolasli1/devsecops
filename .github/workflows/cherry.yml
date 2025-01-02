@@ -1,47 +1,45 @@
 name: Cherry Pick Workflow v2
 
 on:
-  pull_request:
-    branches:
-      - main
-    types: ["closed"]
-
-env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  workflow_dispatch:
+    inputs:
+      commit_id:
+        description: 'ID del commit a cherry-pick'
+        required: true
+      branch:
+        description: 'Rama desde donde se hará el cherry-pick'
+        required: true
+        default: 'develop'
 
 jobs:
-  cherry_pick:
+  cherry_pick_and_deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+    - name: Check out code
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ inputs.branch }} # Asegúrate de revisar la rama especificada por el usuario
 
-      - name: Cherry pick into release-v1.0
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'release-v1.0') && github.event.pull_request.merged == true }}
-        uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: release-v1.0
-          cherry-pick-branch: cherry-pick-release-v1.0-${{ github.sha }}
-          labels: |
-            cherry-pick
-          title: '[cherry-pick] {old_title}'
-          body: >
-            Cherry picking changes from PR #${{ github.event.pull_request.number }} 
-            to release-v1.0 branch.
+    - name: Fetch all branches and commits
+      run: git fetch --all
 
-      - name: Cherry pick into release-v2.0
-        if: ${{ contains(github.event.pull_request.labels.*.name, 'release-v2.0') && github.event.pull_request.merged == true }}
-        uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: release-v2.0
-          cherry-pick-branch: cherry-pick-release-v2.0-${{ github.sha }}
-          labels: |
-            cherry-pick
-          title: '[cherry-pick] {old_title}'
-          body: >
-            Cherry picking changes from PR #${{ github.event.pull_request.number }} 
-            to release-v2.0 branch.
+    - name: Cherry-pick the commit
+      run: |
+        git cherry-pick ${{ inputs.commit_id }} || (echo "Cherry-pick failed!" && exit 1)
+
+    - name: Verify cherry-pick
+      run: git log -1 --oneline
+
+    - name: Set up deployment (optional)
+      run: |
+        echo "Commit cherry-picked: ${{ inputs.commit_id }}"
+        echo "Branch used: ${{ inputs.branch }}"
+
+    - name: Deploy Application
+      env:
+        APP_ENV: production # Cambia esto según tu entorno
+      run: |
+        echo "Starting deployment with cherry-picked commit..."
+        # Aquí va tu lógica de despliegue (Docker build, Terraform apply, etc.)
+        echo "Deployment successful!"
