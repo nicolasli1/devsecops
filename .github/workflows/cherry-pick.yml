@@ -36,3 +36,10 @@ jobs:
           git checkout ${{ inputs.target_branch }}
           git cherry-pick ${{ inputs.commit_hash }}
           git push origin ${{ inputs.target_branch }}
+
+      - name: Push changes
+        run: |
+          git push origin ${{ inputs.target_branch }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
