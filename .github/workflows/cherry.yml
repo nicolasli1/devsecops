@@ -1,0 +1,47 @@
+name: Cherry Pick Workflow v2
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: ["closed"]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  cherry_pick:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Cherry pick into release-v1.0
+        if: ${{ contains(github.event.pull_request.labels.*.name, 'release-v1.0') && github.event.pull_request.merged == true }}
+        uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: release-v1.0
+          cherry-pick-branch: cherry-pick-release-v1.0-${{ github.sha }}
+          labels: |
+            cherry-pick
+          title: '[cherry-pick] {old_title}'
+          body: >
+            Cherry picking changes from PR #${{ github.event.pull_request.number }} 
+            to release-v1.0 branch.
+
+      - name: Cherry pick into release-v2.0
+        if: ${{ contains(github.event.pull_request.labels.*.name, 'release-v2.0') && github.event.pull_request.merged == true }}
+        uses: carloscastrojumo/github-cherry-pick-action@v1.0.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: release-v2.0
+          cherry-pick-branch: cherry-pick-release-v2.0-${{ github.sha }}
+          labels: |
+            cherry-pick
+          title: '[cherry-pick] {old_title}'
+          body: >
+            Cherry picking changes from PR #${{ github.event.pull_request.number }} 
+            to release-v2.0 branch.
