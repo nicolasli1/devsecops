@@ -1,7 +1,7 @@
 name: Cherry Pick Workflow
 
 on:
-  workflow_dispatch: # Permite disparar el workflow manualmente desde la interfaz de GitHub
+  workflow_dispatch:
     inputs:
       source_branch:
         description: "Nombre de la rama origen para cherry-pick"
@@ -20,19 +20,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0 # Necesario para acceder al historial completo de commits
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-    - name: Cherry-pick commit
-      uses: carloscastrojumo/github-cherry-pick-action@v1.0.10
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        source_branch: ${{ inputs.source_branch }}
-        commit_hash: ${{ inputs.commit_hash }}
-        target_branch: ${{ inputs.target_branch }}
+      - name: Set up Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
 
-    - name: Push changes
-      run: |
-        git push origin ${{ inputs.target_branch }}
+      - name: Cherry-pick commit
+        run: |
+          git fetch origin ${{ inputs.source_branch }}
+          git checkout ${{ inputs.target_branch }}
+          git cherry-pick ${{ inputs.commit_hash }}
+          git push origin ${{ inputs.target_branch }}
