@@ -1,4 +1,4 @@
-name: Cherry Pick Workflow v2
+name: Cherry-Pick and Deploy
 
 on:
   workflow_dispatch:
